@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UT71 BLE Dashboard Work-In-Progress</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    #mainValue {
+      font-size: 3rem;
+      text-align: center;
+    }
+    canvas {
+      max-height: 200px;
+    }
+    table td, table th {
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body class="p-3">
+  <div class="container">
+    <div class="mb-3">
+      <button id="connect" class="btn btn-primary">Connect</button>
+	  <button id="reset" class="btn btn-primary">Reset</button>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-body">
+        <div id="mainValue">0.0000</div>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+	  <div class="card-header d-flex justify-content-between align-items-center">
+		<span>Chart</span>
+		<button id="downloadChart" class="btn btn-sm btn-outline-secondary">Download Image</button>
+	  </div>
+      <div class="card-body">
+        <canvas id="chart" height="100"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>History</span>
+        <button id="exportCsv" class="btn btn-sm btn-outline-secondary">Export CSV</button>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>No</th>
+              <th>Date Time</th>
+              <th>Function</th>
+              <th>Value</th>
+              <th>Unit</th>
+            </tr>
+          </thead>
+          <tbody id="historyTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="ui.js"></script>
+  <script type="module" src="ble.js"></script>
+</body>
+</html>
