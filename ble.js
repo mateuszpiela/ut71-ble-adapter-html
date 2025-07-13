@@ -39,7 +39,7 @@ document.getElementById('connect').addEventListener('click', async () => {
       initUI();
     } catch (err) {
       console.error(err);
-	  alert('Cannot connect: ${err.message}');
+	  alert(`Cannot connect: ${err.message}`);
     }
   } else {
     // Rozłączanie
@@ -95,6 +95,7 @@ async function sendTX(data) {
   await txChar.writeValue(new Uint8Array(data));
 }
 
+/* Reverse engineered from old IDMM app */
 function parseUT71(data) {
   const full = Array.from(data);              
   const raw = full.map(v => v & 0x0F);      
