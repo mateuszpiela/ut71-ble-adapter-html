@@ -22,7 +22,8 @@ export function initUI() {
       scales: {
         x: { title: { display: true, text: 'Time' } },
         y: { title: { display: true, text: 'Value' } }
-      }
+      },
+      maintainAspectRatio: false
     }
   });
 
