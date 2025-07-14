@@ -78,7 +78,13 @@
       </div>
     </div>
   </div>
-
+  <script>
+	let userAgentString = navigator.userAgent;
+	let chromeAgent = userAgentString.indexOf("Chrome") > -1;
+	if(!chromeAgent) {
+	   Alert("This app only works in Chrome or Chromium based browsers");
+	}
+  </script>
   <script type="module" src="ui.js"></script>
   <script type="module" src="ble.js"></script>
 </body>
