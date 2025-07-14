@@ -95,9 +95,6 @@ document.getElementById("shareCsv").addEventListener("click", async () => {
   
   if (navigator.canShare(share)) {
 	  try {
-		let permission = await navigator.permissions.query({
-			name: 'notifications',
-		});
 		await navigator.share(share);
 	  } catch (error) {
 		alert(`Error: ${error.message}`);
