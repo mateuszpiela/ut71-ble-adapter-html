@@ -74,31 +74,6 @@ function exportCSV() {
   URL.revokeObjectURL(url);
 }
 
-
-document.getElementById("shareCsv").addEventListener("click", async () => {
-  let csv = produceCSV();
-
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const file = new File([blob], "share.csv", { type: 'text/csv;charset=utf-8;' });
-  const fileArray = [ file ]
-  
-  const shareData = {
-    files: [file],
-    title: "Data export from UT71 Multimeter WebApp",
-    text: "Please find the attached CSV data."
-  };
-  
-  if (navigator.canShare && navigator.canShare({ files: [file] })) {
-    try {
-      await navigator.share(shareData);
-    } catch (error) {
-      alert("Sharing failed: " + error.message);
-    }
-  } else {
-    alert("Sharing not supported.");
-  }
-});
-
 document.getElementById('reset').addEventListener('click', () => {
   chart.data.labels = [];
   chart.data.datasets.forEach(dataset => {
