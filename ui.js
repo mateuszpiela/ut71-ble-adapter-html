@@ -74,7 +74,6 @@ function exportCSV() {
   URL.revokeObjectURL(url);
 }
 
-
 document.getElementById("shareCsv").addEventListener("click", async () => {
   let csv = produceCSV();
 
