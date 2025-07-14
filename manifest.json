@@ -1,7 +1,7 @@
 {
   "name": "UT71 Multimeter Dashboard App",
   "short_name": "UT71",
-  "display": "browser",
+  "display": "standalone",
   "orientation": "any",
   "start_url": "https://github.mateuszpiela.eu/ut71-ble-adapter-html/",
   "icons": [
