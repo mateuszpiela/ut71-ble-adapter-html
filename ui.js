@@ -53,11 +53,17 @@ export function appendToHistory(datetime, fn, value, unit) {
   history.push({ datetime, fn, value, unit });
 }
 
-function exportCSV() {
+function produceCSV() {
   let csv = 'No,Date Time,Function,Value,Unit\n';
   history.forEach((entry, i) => {
     csv += `${i + 1},${entry.datetime},${entry.fn},${entry.value},${entry.unit}\n`;
   });
+  
+  return csv;
+}
+
+function exportCSV() {
+  let csv = produceCSV();
 
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
@@ -67,6 +73,37 @@ function exportCSV() {
   a.click();
   URL.revokeObjectURL(url);
 }
+
+async function shareCSV() {
+  let csv = produceCSV();
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const file = new File([blob], "share.csv", {type: 'text/csv;charset=utf-8;' });
+  const fileArray = [ file ]
+  const share = {
+	  files: fileArray,
+	  title: "Data export from UT71 Multimeter WebApp",
+	  text: "Please find the attached CSV data."
+  };
+  
+  
+  if (!navigator.canShare) {
+    alert(`Your browser doesn't support the Web Share API.`);
+    return;
+  }
+  
+  if (navigator.canShare(share)) {
+	  try {
+		await navigator.share(share);
+	  } catch (error) {
+		alert(`Error: ${error.message}`);
+	  }
+  } 
+}
+
+document.getElementById("shareCsv").addEventListener("click", async () => {
+	await shareCSV();
+});
 
 document.getElementById('reset').addEventListener('click', () => {
   chart.data.labels = [];
