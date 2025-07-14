@@ -74,7 +74,8 @@ function exportCSV() {
   URL.revokeObjectURL(url);
 }
 
-async function shareCSV() {
+
+document.getElementById("shareCsv").addEventListener("click", async () => {
   let csv = produceCSV();
 
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -94,15 +95,14 @@ async function shareCSV() {
   
   if (navigator.canShare(share)) {
 	  try {
+		let permission = await navigator.permissions.query({
+			name: 'notifications',
+		});
 		await navigator.share(share);
 	  } catch (error) {
 		alert(`Error: ${error.message}`);
 	  }
   } 
-}
-
-document.getElementById("shareCsv").addEventListener("click", async () => {
-	await shareCSV();
 });
 
 document.getElementById('reset').addEventListener('click', () => {
