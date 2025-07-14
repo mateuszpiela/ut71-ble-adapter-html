@@ -28,6 +28,10 @@ export function initUI() {
   });
 
   document.getElementById('exportCsv').addEventListener('click', exportCSV);
+  document.getElementById('reset').disabled = false;
+  document.getElementById('exportCsv').disabled = false;
+  document.getElementById('shareCsv').disabled = false;
+  document.getElementById('downloadChart').disabled = false;
 }
 
 export function updateMainValue(value) {

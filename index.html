@@ -38,7 +38,7 @@
   <div class="container">
     <div class="mb-3">
       <button id="connect" class="btn btn-primary">Connect</button>
-	  <button id="reset" class="btn btn-primary">Reset</button>
+	  <button id="reset" class="btn btn-primary" disabled>Reset</button>
     </div>
 
     <div class="card mb-3">
@@ -50,7 +50,7 @@
     <div class="chartUi card mb-3">
 	  <div class="card-header d-flex justify-content-between align-items-center">
 		<span>Chart</span>
-		<button id="downloadChart" class="btn btn-sm btn-outline-secondary">Download Image</button>
+		<button id="downloadChart" class="btn btn-sm btn-outline-secondary" disabled>Download Image</button>
 	  </div>
       <div class="card-body">
         <canvas id="chart" height="100"></canvas>
@@ -61,8 +61,8 @@
       <div class="card-header d-flex justify-content-between align-items-center">
         <span>History</span>
 		<div class="action-bt">
-			<button id="shareCsv" class="btn btn-sm btn-outline-secondary">Share CSV</button>
-			<button id="exportCsv" class="btn btn-sm btn-outline-secondary">Export CSV</button>
+			<button id="shareCsv" class="btn btn-sm btn-outline-secondary" disabled>Share CSV</button>
+			<button id="exportCsv" class="btn btn-sm btn-outline-secondary" disabled>Export CSV</button>
 		</div>
       </div>
       <div class="table-responsive">
