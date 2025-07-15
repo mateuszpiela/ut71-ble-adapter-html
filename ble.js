@@ -7,7 +7,7 @@ let device, server, service, rxChar, txChar;
 let receiveBuffer = [];
 let connected = false;
 
-import { initUI, updateMainValue, updateChart, appendToHistory } from './ui.js';
+import { setConnectionStatus, initUI, updateMainView, updateChart, appendToHistory } from './ui.js';
 
 
 const output = document.getElementById('output');
@@ -35,6 +35,7 @@ document.getElementById('connect').addEventListener('click', async () => {
       btn.classList.remove('btn-primary');
       btn.classList.add('btn-danger');
       btn.textContent = 'Disconnect';
+	  setConnectionStatus(connected);
 
       initUI();
     } catch (err) {
@@ -42,7 +43,6 @@ document.getElementById('connect').addEventListener('click', async () => {
 	  alert(`Cannot connect: ${err.message}`);
     }
   } else {
-    // Rozłączanie
     try {
       if (rxChar) {
         await rxChar.stopNotifications();
@@ -57,6 +57,7 @@ document.getElementById('connect').addEventListener('click', async () => {
       btn.classList.remove('btn-danger');
       btn.classList.add('btn-primary');
       btn.textContent = 'Connect';
+	  setConnectionStatus(connected);
 
     } catch (err) {
       console.error(err);
@@ -81,11 +82,11 @@ function handleNotification(event) {
     const parsed = parseUT71(Uint8Array.from(chunk));
 	const now = new Date().toLocaleString().replace(',', '');
 
-	updateMainValue(`${parsed.value} ${parsed.unit}`);
+	updateMainView(parsed);
 	
 	updateChart(now, parseFloat(parsed.value));
 	appendToHistory(now, parsed.functionName, parsed.value, parsed.unit);
-
+	
     //output.textContent += `\n✅ ${parsed.value} ${parsed.unit} (${parsed.functionName})`;
   }
 }
@@ -97,6 +98,27 @@ async function sendTX(data) {
 
 /* Reverse engineered from old IDMM app */
 function parseUT71(data) {
+  const FN_NAME = ["AC", "DC", "AC", "DC", "OHM", "CAP", "Temp", "DC", "DC", "DC", "Buzzer", "Diode", "Freq", "Temp", "空", "%(4-20mA)", "Duty", "AC", "AC", "AC"];
+  const RANGE_MAP = {
+    0: ["400mV"],
+    1: ["0V", "4V", "40V", "400V", "1000V"],
+    2: ["0V", "4V", "40V", "400V", "750V"],
+    3: ["400mV"],
+    4: ["0空", "400Ω", "4kΩ", "40kΩ", "400kΩ", "4MΩ", "40MΩ"],
+    5: ["0nF", "40nF", "400nF", "4uF", "40uF", "400uF", "4mF", "40mF"],
+    6: ["1000℃"],
+    7: ["400uA", "4000uA"],
+    8: ["40mA", "400mA"],
+    9: ["0A", "10A"],
+    12: ["40Hz", "400Hz", "4kHz", "40kHz", "400kHz", "4MHz", "40MHz", "400MHz"],
+    13: ["1832℉"],
+    15: ["100%"],
+    16: ["100%"],
+    17: ["400uA", "4000uA"],
+    18: ["40mA", "400mA"],
+    19: ["0A", "10A"]
+  };	
+
   const full = Array.from(data);              
   const raw = full.map(v => v & 0x0F);      
   let valueStr = '';
@@ -117,33 +139,12 @@ function parseUT71(data) {
     fn = 16;
   }
 
-  const UT71_FN_NAME = ["AC", "DC", "AC", "DC", "OHM", "CAP", "Temp", "DC", "DC", "DC", "Buzzer", "Diode", "Freq", "Temp", "空", "%(4-20mA)", "Duty", "AC", "AC", "AC"];
-  const UT71_RANGE_MAP = {
-    0: ["400mV"],
-    1: ["0V", "4V", "40V", "400V", "1000V"],
-    2: ["0V", "4V", "40V", "400V", "750V"],
-    3: ["400mV"],
-    4: ["0空", "400Ω", "4kΩ", "40kΩ", "400kΩ", "4MΩ", "40MΩ"],
-    5: ["0nF", "40nF", "400nF", "4uF", "40uF", "400uF", "4mF", "40mF"],
-    6: ["1000℃"],
-    7: ["400uA", "4000uA"],
-    8: ["40mA", "400mA"],
-    9: ["0A", "10A"],
-    12: ["40Hz", "400Hz", "4kHz", "40kHz", "400kHz", "4MHz", "40MHz", "400MHz"],
-    13: ["1832℉"],
-    15: ["100%"],
-    16: ["100%"],
-    17: ["400uA", "4000uA"],
-    18: ["40mA", "400mA"],
-    19: ["0A", "10A"]
-  };
-
-  const rangeStrs = UT71_RANGE_MAP[fn] || [];
+  const rangeStrs = RANGE_MAP[fn] || [];
   const rangeStr = rangeStrs[rangeCode] || '';
   const match = rangeStr.match(/(\d+)([^0-9]*)/);
   const range = match ? parseInt(match[1]) : 0;
   let unit = match ? match[2] : '';
-  let functionName = UT71_FN_NAME[fn] || 'UNK';
+  let functionName = FN_NAME[fn] || 'UNKNOWN';
 
   const acdcBits = full[7] & 0x0F;
   if (acdcBits === 3) functionName = 'AC+DC';
@@ -164,7 +165,8 @@ function parseUT71(data) {
   return {
     value: flag ? 'ERR' : valueStr,
     unit: unit,
-    functionName: functionName
+    functionName: functionName,
+	range: rangeStr
   };
 }
 
