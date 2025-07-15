@@ -35,9 +35,9 @@ export function initUI() {
 	barChart = new Chart(ctxBarChart, {
 	  type: 'bar',
 	  data: {
-		labels: [''], // jedna belka
+		labels: [''],
 		datasets: [{
-		  label: '', // można pominąć, jeśli nie chcesz legendy
+		  label: '',
 		  data: [0],
 		  backgroundColor: '#007bff',
 		  borderRadius: 4,
@@ -45,7 +45,7 @@ export function initUI() {
 		}]
 	  },
 	  options: {
-		indexAxis: 'y', // <-- TO TWORZY HORIZONTALNY wykres
+		indexAxis: 'y',
 		animation: false,
 		responsive: true,
 		maintainAspectRatio: false,
